@@ -21,8 +21,8 @@ public class GridManager : MonoBehaviour
     {
         Vector3 positionOffset = transform.position - new Vector3(GridDimension * Distance / 2.0f, GridDimension * Distance / 2.0f, 0);
 
-        for(int column = 0; column < GridDimension; column++)
-            for(int row = 0; row < GridDimension; row++)
+        for (int row = 0; row < GridDimension; row++)
+            for (int column = 0; column < GridDimension; column++)
             {
                 GameObject newTile = Instantiate(TilePrefab);
                 SpriteRenderer renderer = newTile.GetComponent<SpriteRenderer>();

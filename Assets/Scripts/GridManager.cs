@@ -25,12 +25,40 @@ public class GridManager : MonoBehaviour
             for (int column = 0; column < GridDimension; column++)
             {
                 GameObject newTile = Instantiate(TilePrefab);
+
+                List<Sprite> possibleSprites = new List<Sprite>(Sprites);
+
+                //Choose what sprite to use for this cell
+                Sprite left1 = GetSpriteAt(column - 1, row);
+                Sprite left2 = GetSpriteAt(column - 2, row);
+                if (left2 != null && left1 == left2)
+                {
+                    possibleSprites.Remove(left1);
+                }
+
+                Sprite down1 = GetSpriteAt(column, row - 1);
+                Sprite down2 = GetSpriteAt(column, row - 2);
+                if (down2 != null && down1 == down2)
+                {
+                    possibleSprites.Remove(down1);
+                }
+
                 SpriteRenderer renderer = newTile.GetComponent<SpriteRenderer>();
-                renderer.sprite = Sprites[Random.Range(0, Sprites.Count)];
+                renderer.sprite = possibleSprites[Random.Range(0, possibleSprites.Count)];
                 newTile.transform.parent = transform;
                 newTile.transform.position = new Vector3(column * Distance, row * Distance, 0) + positionOffset;
                 
                 Grid[column, row] = newTile;
             }
+    }
+
+    Sprite GetSpriteAt(int column, int row)
+    {
+        if (column < 0 || column >= GridDimension
+         || row < 0 || row >= GridDimension)
+            return null;
+        GameObject tile = Grid[column, row];
+        SpriteRenderer renderer = tile.GetComponent<SpriteRenderer>();
+        return renderer.sprite;
     }
 }

@@ -45,6 +45,8 @@ public class GridManager : MonoBehaviour
 
                 SpriteRenderer renderer = newTile.GetComponent<SpriteRenderer>();
                 renderer.sprite = possibleSprites[Random.Range(0, possibleSprites.Count)];
+
+                Tile tile = newTile.AddComponent<Tile>();
                 newTile.transform.parent = transform;
                 newTile.transform.position = new Vector3(column * Distance, row * Distance, 0) + positionOffset;
                 

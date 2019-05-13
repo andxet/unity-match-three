@@ -7,6 +7,8 @@ public class Tile : MonoBehaviour
     private static Tile selected;
     private SpriteRenderer Renderer;
 
+    public Vector2Int Position;
+
     private void Start()
     {
         Renderer = GetComponent<SpriteRenderer>();
@@ -24,11 +26,26 @@ public class Tile : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if(selected != null)
+        if (selected != null)
         {
+            if (selected == this)
+                return;
             selected.Unselect();
+            if (Vector2Int.Distance(selected.Position, Position) == 1)
+            {
+                GridManager.Instance.SwapTiles(Position, selected.Position);
+                selected = null;
+            }
+            else
+            {
+                selected = this;
+                Select();
+            }
         }
-        selected = this;
-        Select();
+        else
+        {
+            selected = this;
+            Select();
+        }
     }
 }

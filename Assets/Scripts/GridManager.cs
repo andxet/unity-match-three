@@ -10,6 +10,13 @@ public class GridManager : MonoBehaviour
     public float Distance = 1.0f;
     private GameObject[,] Grid;
 
+    public static GridManager Instance { get; private set; }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +54,8 @@ public class GridManager : MonoBehaviour
                 renderer.sprite = possibleSprites[Random.Range(0, possibleSprites.Count)];
 
                 Tile tile = newTile.AddComponent<Tile>();
+                tile.Position = new Vector2Int(column, row);
+
                 newTile.transform.parent = transform;
                 newTile.transform.position = new Vector3(column * Distance, row * Distance, 0) + positionOffset;
                 
@@ -62,5 +71,18 @@ public class GridManager : MonoBehaviour
         GameObject tile = Grid[column, row];
         SpriteRenderer renderer = tile.GetComponent<SpriteRenderer>();
         return renderer.sprite;
+    }
+
+    public void SwapTiles(Vector2Int tile1Position, Vector2Int tile2Position)
+    {
+        GameObject tile1 = Grid[tile1Position.x, tile1Position.y];
+        SpriteRenderer renderer1 = tile1.GetComponent<SpriteRenderer>();
+        
+        GameObject tile2 = Grid[tile2Position.x, tile2Position.y];
+        SpriteRenderer renderer2 = tile2.GetComponent<SpriteRenderer>();
+
+        Sprite temp = renderer1.sprite;
+        renderer1.sprite = renderer2.sprite;
+        renderer2.sprite = temp;
     }
 }

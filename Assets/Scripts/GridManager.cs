@@ -73,6 +73,16 @@ public class GridManager : MonoBehaviour
         return renderer.sprite;
     }
 
+    SpriteRenderer GetSpriteRendererAt(int column, int row)
+    {
+        if (column < 0 || column >= GridDimension
+         || row < 0 || row >= GridDimension)
+            return null;
+        GameObject tile = Grid[column, row];
+        SpriteRenderer renderer = tile.GetComponent<SpriteRenderer>();
+        return renderer;
+    }
+
     public void SwapTiles(Vector2Int tile1Position, Vector2Int tile2Position)
     {
         GameObject tile1 = Grid[tile1Position.x, tile1Position.y];
@@ -84,5 +94,83 @@ public class GridManager : MonoBehaviour
         Sprite temp = renderer1.sprite;
         renderer1.sprite = renderer2.sprite;
         renderer2.sprite = temp;
+
+        bool changesOccurs = CheckMatches();
+        if(!changesOccurs)
+        {
+            temp = renderer1.sprite;
+            renderer1.sprite = renderer2.sprite;
+            renderer2.sprite = temp;
+        }
+    }
+
+    bool CheckMatches()
+    {
+        HashSet<SpriteRenderer> matchedTiles = new HashSet<SpriteRenderer>();
+        for (int row = 0; row < GridDimension; row++)
+        {
+            for (int column = 0; column < GridDimension; column++)
+            {
+                bool foundThisTile = false;
+                SpriteRenderer current = GetSpriteRendererAt(column, row);
+                if (current.sprite == null)
+                    continue;
+
+                List<SpriteRenderer> horizontalMatches = FindColumnMatchForTile(column, row, current.sprite);
+                if (horizontalMatches.Count >= 2)
+                {
+                    matchedTiles.UnionWith(horizontalMatches);
+                    foundThisTile = true;
+                }
+
+                List<SpriteRenderer> verticalMatches = FindRowMatchForTile(column, row, current.sprite);
+                if (verticalMatches.Count >= 2)
+                {
+                    matchedTiles.UnionWith(verticalMatches);
+                    foundThisTile = true;
+                }
+
+                if(foundThisTile)
+                {
+                    current.sprite = null;
+                }
+            }
+        }
+
+        foreach (SpriteRenderer renderer in matchedTiles)
+        {
+            renderer.sprite = null;
+        }
+        return matchedTiles.Count > 0;
+    }
+
+    List<SpriteRenderer> FindColumnMatchForTile(int col, int row, Sprite sprite)
+    {
+        List<SpriteRenderer> result = new List<SpriteRenderer>();
+        for (int i = col + 1; i < GridDimension; i++)
+        {
+            SpriteRenderer nextColumn = GetSpriteRendererAt(i, row);
+            if (nextColumn == null || nextColumn.sprite != sprite)
+            {
+                break;
+            }
+            result.Add(nextColumn);
+        }
+        return result;
+    }
+
+    List<SpriteRenderer> FindRowMatchForTile(int col, int row, Sprite sprite)
+    {
+        List<SpriteRenderer> result = new List<SpriteRenderer>();
+        for (int i = row + 1; i < GridDimension; i++)
+        {
+            SpriteRenderer nextRow = GetSpriteRendererAt(col, i);
+            if (nextRow == null || nextRow.sprite != sprite)
+            {
+                break;
+            }
+            result.Add(nextRow);
+        }
+        return result;
     }
 }

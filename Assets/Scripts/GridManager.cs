@@ -118,28 +118,20 @@ public class GridManager : MonoBehaviour
         {
             for (int column = 0; column < GridDimension; column++)
             {
-                bool foundThisTile = false;
                 SpriteRenderer current = GetSpriteRendererAt(column, row);
-                if (current.sprite == null)
-                    continue;
 
                 List<SpriteRenderer> horizontalMatches = FindColumnMatchForTile(column, row, current.sprite);
                 if (horizontalMatches.Count >= 2)
                 {
                     matchedTiles.UnionWith(horizontalMatches);
-                    foundThisTile = true;
+                    matchedTiles.Add(current);
                 }
 
                 List<SpriteRenderer> verticalMatches = FindRowMatchForTile(column, row, current.sprite);
                 if (verticalMatches.Count >= 2)
                 {
                     matchedTiles.UnionWith(verticalMatches);
-                    foundThisTile = true;
-                }
-
-                if(foundThisTile)
-                {
-                    current.sprite = null;
+                    matchedTiles.Add(current);
                 }
             }
         }
@@ -157,7 +149,7 @@ public class GridManager : MonoBehaviour
         for (int i = col + 1; i < GridDimension; i++)
         {
             SpriteRenderer nextColumn = GetSpriteRendererAt(i, row);
-            if (nextColumn == null || nextColumn.sprite != sprite)
+            if (nextColumn.sprite != sprite)
             {
                 break;
             }
@@ -172,7 +164,7 @@ public class GridManager : MonoBehaviour
         for (int i = row + 1; i < GridDimension; i++)
         {
             SpriteRenderer nextRow = GetSpriteRendererAt(col, i);
-            if (nextRow == null || nextRow.sprite != sprite)
+            if (nextRow.sprite != sprite)
             {
                 break;
             }

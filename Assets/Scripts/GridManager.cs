@@ -102,6 +102,13 @@ public class GridManager : MonoBehaviour
             renderer1.sprite = renderer2.sprite;
             renderer2.sprite = temp;
         }
+        else
+        {
+            do
+            {
+                FillHoles();
+            } while (CheckMatches());
+        }
     }
 
     bool CheckMatches()
@@ -172,5 +179,24 @@ public class GridManager : MonoBehaviour
             result.Add(nextRow);
         }
         return result;
+    }
+
+    void FillHoles()
+    {
+        for (int column = 0; column < GridDimension; column++)
+            for (int row = 0; row < GridDimension; row++)
+            {
+                while (GetSpriteRendererAt(column, row).sprite == null)
+                {
+                    for (int filler = row; filler < GridDimension - 1; filler++)
+                    {
+                        SpriteRenderer current = GetSpriteRendererAt(column, filler);
+                        SpriteRenderer next = GetSpriteRendererAt(column, filler + 1);
+                        current.sprite = next.sprite;
+                    }
+                    SpriteRenderer last = GetSpriteRendererAt(column, GridDimension - 1);
+                    last.sprite = Sprites[Random.Range(0, Sprites.Count)];
+                }
+            }
     }
 }

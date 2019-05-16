@@ -10,11 +10,46 @@ public class GridManager : MonoBehaviour
     public float Distance = 1.0f;
     private GameObject[,] Grid;
 
+    public int StartingMoves = 50;
+    private int _numMoves;
+    public int NumMoves
+    {
+        get
+        {
+            return _numMoves;
+        }
+
+        set
+        {
+            _numMoves = value;
+        }
+    }
+
+    private int _score;
+    public int Score
+    {
+        get
+        {
+            return _score;
+        }
+
+        set
+        {
+            _score = value;
+        }
+    }
+
+    public GameObject GameOverMenu;
+    public Text MovesText;
+    public Text ScoreText;
+
     public static GridManager Instance { get; private set; }
 
     void Awake()
     {
         Instance = this;
+        Score = 0;
+        NumMoves = StartingMoves;
     }
 
     // Start is called before the first frame update
@@ -104,10 +139,16 @@ public class GridManager : MonoBehaviour
         }
         else
         {
+            NumMoves--;
             do
             {
                 FillHoles();
             } while (CheckMatches());
+            if (NumMoves <= 0)
+            {
+                NumMoves = 0;
+                GameOver();
+            }
         }
     }
 
@@ -140,6 +181,7 @@ public class GridManager : MonoBehaviour
         {
             renderer.sprite = null;
         }
+        Score += matchedTiles.Count;
         return matchedTiles.Count > 0;
     }
 
@@ -190,5 +232,10 @@ public class GridManager : MonoBehaviour
                     last.sprite = Sprites[Random.Range(0, Sprites.Count)];
                 }
             }
+    }
+
+    void GameOver()
+    {
+        Debug.Log("GAME OVER");
     }
 }

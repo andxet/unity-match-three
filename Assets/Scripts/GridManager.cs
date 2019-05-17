@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -22,6 +23,7 @@ public class GridManager : MonoBehaviour
         set
         {
             _numMoves = value;
+            MovesText.text = _numMoves.ToString();
         }
     }
 
@@ -36,12 +38,13 @@ public class GridManager : MonoBehaviour
         set
         {
             _score = value;
+            ScoreText.text = _score.ToString();
         }
     }
 
     public GameObject GameOverMenu;
-    public Text MovesText;
-    public Text ScoreText;
+    public TextMeshProUGUI MovesText;
+    public TextMeshProUGUI ScoreText;
 
     public static GridManager Instance { get; private set; }
 
@@ -56,6 +59,7 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         Grid = new GameObject[GridDimension, GridDimension];
+        GameOverMenu.SetActive(false);
         InitGrid();
     }
 
@@ -237,5 +241,7 @@ public class GridManager : MonoBehaviour
     void GameOver()
     {
         Debug.Log("GAME OVER");
+        PlayerPrefs.SetInt("score", Score);
+        GameOverMenu.SetActive(true);
     }
 }

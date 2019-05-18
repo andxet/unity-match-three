@@ -140,9 +140,11 @@ public class GridManager : MonoBehaviour
             temp = renderer1.sprite;
             renderer1.sprite = renderer2.sprite;
             renderer2.sprite = temp;
+            SoundManager.Instance.PlaySound(SoundType.TypeMove);
         }
         else
         {
+            SoundManager.Instance.PlaySound(SoundType.TypePop);
             NumMoves--;
             do
             {
@@ -243,5 +245,6 @@ public class GridManager : MonoBehaviour
         Debug.Log("GAME OVER");
         PlayerPrefs.SetInt("score", Score);
         GameOverMenu.SetActive(true);
+        SoundManager.Instance.PlaySound(SoundType.TypeGameOver);
     }
 }

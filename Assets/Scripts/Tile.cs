@@ -38,12 +38,14 @@ public class Tile : MonoBehaviour
             }
             else
             {
+                SoundManager.Instance.PlaySound(SoundType.TypeSelect);
                 selected = this;
                 Select();
             }
         }
         else
         {
+            SoundManager.Instance.PlaySound(SoundType.TypeSelect);
             selected = this;
             Select();
         }

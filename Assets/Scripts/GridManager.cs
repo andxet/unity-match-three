@@ -228,14 +228,15 @@ public class GridManager : MonoBehaviour
             {
                 while (GetSpriteRendererAt(column, row).sprite == null)
                 {
+                    SpriteRenderer current = GetSpriteRendererAt(column, row);
+                    SpriteRenderer next = current;
                     for (int filler = row; filler < GridDimension - 1; filler++)
                     {
-                        SpriteRenderer current = GetSpriteRendererAt(column, filler);
-                        SpriteRenderer next = GetSpriteRendererAt(column, filler + 1);
+                        next = GetSpriteRendererAt(column, filler + 1);
                         current.sprite = next.sprite;
+                        current = next;
                     }
-                    SpriteRenderer last = GetSpriteRendererAt(column, GridDimension - 1);
-                    last.sprite = Sprites[Random.Range(0, Sprites.Count)];
+                    next.sprite = Sprites[Random.Range(0, Sprites.Count)];
                 }
             }
     }
